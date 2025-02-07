@@ -34,6 +34,9 @@ app.layout = html.Div([
     # Graphique des betas
     dcc.Graph(id="beta-chart"),
 
+    # Graphique des Sharpes Ratio
+    dcc.Graph(id="sharpe-ratio-chart"),
+
     # Matrice de corrélation
     dcc.Graph(id="correlation-heatmap"),
 ])
@@ -54,9 +57,11 @@ def update_dropdown(_):
      Output("cumulative-returns-chart", "figure"),
      Output("volatility-chart", "figure"),
      Output("beta-chart", "figure"),
+     Output("sharpe-ratio-chart", "figure"),  # 🆕 Ajout du Sharpe Ratio ici
      Output("correlation-heatmap", "figure")],
     [Input("dropdown-tickers", "value")]
 )
+
 def update_graphs(selected_tickers):
     if not selected_tickers:
         return go.Figure(), go.Figure(), go.Figure(), go.Figure(), go.Figure()
@@ -96,6 +101,17 @@ def update_graphs(selected_tickers):
 
     beta_fig.update_layout(title="Beta des Actifs par rapport à l’Indice", yaxis_title="Beta")
 
+    # Graphique du Sharpe Ratio
+    sharpe_fig = go.Figure()
+    df_metrics = load_metrics()  # Charger les métriques
+
+    if "Sharpe Ratio" in df_metrics.columns:
+        for ticker in selected_tickers:
+            if ticker in df_metrics.index and not pd.isna(df_metrics.loc[ticker, "Sharpe Ratio"]):
+                sharpe_fig.add_trace(go.Bar(x=[ticker], y=[df_metrics.loc[ticker, "Sharpe Ratio"]], name=ticker))
+
+    sharpe_fig.update_layout(title="Sharpe Ratio des Actifs", yaxis_title="Sharpe Ratio")
+
 
     # Matrice de corrélation
     correlation_matrix = df_prices.filter(like="Return_").corr()
@@ -114,7 +130,8 @@ def update_graphs(selected_tickers):
     heatmap_fig.update_layout(title="Matrice de Corrélation")
 
 
-    return price_fig, returns_fig, volatility_fig, beta_fig, heatmap_fig
+    return price_fig, returns_fig, volatility_fig, beta_fig, sharpe_fig, heatmap_fig
+
 
 # Lancer l'application
 if __name__ == "__main__":
