@@ -64,7 +64,7 @@ def update_dropdown(_):
 
 def update_graphs(selected_tickers):
     if not selected_tickers:
-        return go.Figure(), go.Figure(), go.Figure(), go.Figure(), go.Figure()
+        return go.Figure(), go.Figure(), go.Figure(), go.Figure(), go.Figure(), go.Figure()
 
     df_prices = load_prices()
     df_metrics = load_metrics()
