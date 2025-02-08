@@ -1,4 +1,4 @@
-# FinancialPython
+# Financial Python
 
 ## Finance and appV2
 This project is an interactive stock market analysis dashboard built with Python, Dash, and Plotly. It allows users to dynamically select stocks, define a custom date range, and analyze key financial metrics, including volatility, beta, Sharpe ratio, and correlation matrix. The dashboard is designed to be fully scalable and adaptable for financial data analysis in banking and investment contexts.
